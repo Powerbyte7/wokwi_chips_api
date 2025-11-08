@@ -131,7 +131,7 @@ impl Pin {
         let watch_config = WatchConfig {
             user_data: self as *const _ as *const c_void,
             edge: edge as u32,
-            pin_change: pin_change_trampoline as *const c_void,
+            pin_change: pin_change_trampoline,
         };
 
         unsafe {
