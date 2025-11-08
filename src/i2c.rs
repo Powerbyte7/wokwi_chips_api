@@ -43,9 +43,10 @@ extern "C" fn i2c_read_trampoline(user_data: *mut c_void) -> u8 {
 extern "C" fn i2c_write_trampoline(user_data: *mut c_void, data: u8) -> bool {
     let i2c_device = unsafe { &mut *(user_data as *mut I2CDeviceConfig) };
     if i2c_device.write_callback.is_some() {
-        i2c_device.write_callback.as_mut().unwrap()(data);
+        i2c_device.write_callback.as_mut().unwrap()(data)
+    } else {
+        false
     }
-    true // Ack
 }
 
 extern "C" fn i2c_disconnect_trampoline(user_data: *mut c_void) {
