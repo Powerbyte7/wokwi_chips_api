@@ -40,11 +40,12 @@ extern "C" fn i2c_read_trampoline(user_data: *mut c_void) -> u8 {
     }
 }
 
-extern "C" fn i2c_write_trampoline(user_data: *mut c_void, data: u8) {
+extern "C" fn i2c_write_trampoline(user_data: *mut c_void, data: u8) -> bool {
     let i2c_device = unsafe { &mut *(user_data as *mut I2CDeviceConfig) };
     if i2c_device.write_callback.is_some() {
         i2c_device.write_callback.as_mut().unwrap()(data);
     }
+    true // Ack
 }
 
 extern "C" fn i2c_disconnect_trampoline(user_data: *mut c_void) {
@@ -92,10 +93,10 @@ pub fn create(config: I2CDeviceConfig) {
         address: config.address,
         scl: config.scl.get_id(),
         sda: config.sda.get_id(),
-        connect: i2c_connect_trampoline as *const c_void,
-        read: i2c_read_trampoline as *const c_void,
-        write: i2c_write_trampoline as *const c_void,
-        disconnect: i2c_disconnect_trampoline as *const c_void,
+        connect: i2c_connect_trampoline,
+        read: i2c_read_trampoline,
+        write: i2c_write_trampoline,
+        disconnect: i2c_disconnect_trampoline,
     };
     unsafe {
         i2cInit(&ll_config);
