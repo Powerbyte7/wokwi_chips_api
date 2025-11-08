@@ -8,4 +8,4 @@ repository = "https://github.com/wokwi/wokwi_chips_api"
 license = "MIT"
 
 [dependencies]
-wokwi_chip_ll = "0.1.3"
+wokwi_chip_ll = "0.2.0"
